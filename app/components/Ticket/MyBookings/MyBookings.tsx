@@ -13,7 +13,7 @@ export const MyBookings: React.FC<MyBookingsProps> = ({ bookings, onShowTicket }
   if (bookings.length === 0) return null;
 
   const transformBookingForTicket = (booking: BookingData) => ({
-    ticketNumber: booking.id || 'N/A',
+    ticketNumber: booking.ticketNumber || 'N/A',
     category: { 
       icon: booking.category?.icon || null, 
       name: booking.category?.name || 'Unknown' 

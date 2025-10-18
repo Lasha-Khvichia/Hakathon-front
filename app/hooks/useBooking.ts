@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Category, Service, Branch, BookingData, LoadingState } from '../types';
 import { BOOKING_STEPS } from '../constants';
 import { validateBookingForm } from '../utils/validation';
+import { checkBookingAvailability } from '../components/services/geminiAPI.';
 
 interface UseBookingReturn {
   step: number;
@@ -13,16 +14,18 @@ interface UseBookingReturn {
   selectedTime: string | null;
   bookings: BookingData[];
   loadingState: LoadingState;
+  availabilityResult: any;
   
   handleCategorySelect: (category: Category) => void;
   handleServiceSelect: (service: Service) => void;
   handleBranchSelect: (branch: Branch) => void;
   handleDateSelect: (date: string | Date) => void;
   handleTimeSelect: (time: string) => void;
-  confirmBooking: () => void;
+  confirmBooking: (geminiApiKey?: string) => void;
   resetBooking: () => void;
   goBack: () => void;
   setStep: (step: number) => void;
+  setAvailabilityResult: (result: any) => void;
   
   canProceed: boolean;
   currentStepData: Record<string, unknown>;
@@ -37,27 +40,13 @@ export const useBooking = (): UseBookingReturn => {
   const [selectedDate, setSelectedDate] = useState<string | Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookings, setBookings] = useState<BookingData[]>([]);
+  const [availabilityResult, setAvailabilityResult] = useState<any>(null);
   const [loadingState, setLoadingState] = useState<LoadingState>({
     isLoading: false,
     error: null,
   });
 
-  useEffect(() => {
-    const savedBookings = localStorage.getItem('bookings');
-    if (savedBookings) {
-      try {
-        setBookings(JSON.parse(savedBookings));
-      } catch (error) {
-        console.error('Failed to load bookings from localStorage:', error);
-      }
-    }
-  }, []);
 
-  useEffect(() => {
-    if (bookings.length > 0) {
-      localStorage.setItem('bookings', JSON.stringify(bookings));
-    }
-  }, [bookings]);
 
   const handleCategorySelect = useCallback((category: Category) => {
     setSelectedCategory(category);
@@ -94,7 +83,7 @@ export const useBooking = (): UseBookingReturn => {
     setStep(BOOKING_STEPS.CONFIRMATION);
   }, []);
 
-  const confirmBooking = useCallback(async () => {
+  const confirmBooking = useCallback(async (geminiApiKey?: string) => {
     const bookingData = {
       category: selectedCategory,
       service: selectedService,
@@ -115,6 +104,27 @@ export const useBooking = (): UseBookingReturn => {
     setLoadingState({ isLoading: true, error: null });
 
     try {
+      // Use Gemini AI to check availability if API key provided
+      if (geminiApiKey && selectedCategory && selectedService && selectedBranch && selectedDate && selectedTime) {
+        const availabilityCheck = await checkBookingAvailability({
+          category: selectedCategory.name,
+          branch: selectedBranch.name,
+          service: selectedService.name,
+          date: typeof selectedDate === 'string' ? selectedDate : selectedDate.toISOString().split('T')[0],
+          time: selectedTime
+        }, geminiApiKey);
+
+        setAvailabilityResult(availabilityCheck);
+
+        if (!availabilityCheck.isAvailable) {
+          setLoadingState({
+            isLoading: false,
+            error: availabilityCheck.message
+          });
+          return;
+        }
+      }
+
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const newBooking: BookingData = {
@@ -124,7 +134,7 @@ export const useBooking = (): UseBookingReturn => {
         branch: selectedBranch,
         date: selectedDate,
         time: selectedTime,
-        ticketNumber: Math.floor(Math.random() * 900000) + 100000,
+        ticketNumber: Math.floor(Math.random() * 2000) + 1,
         status: 'confirmed',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -133,7 +143,7 @@ export const useBooking = (): UseBookingReturn => {
       setBookings(prev => [...prev, newBooking]);
       setStep(BOOKING_STEPS.SUCCESS);
       setLoadingState({ isLoading: false, error: null });
-    } catch {
+    } catch (error) {
       setLoadingState({
         isLoading: false,
         error: 'Failed to confirm booking. Please try again.',
@@ -211,6 +221,7 @@ export const useBooking = (): UseBookingReturn => {
     selectedDate,
     selectedTime,
     bookings,
+    availabilityResult,
     loadingState,
     
     handleCategorySelect,
@@ -222,6 +233,7 @@ export const useBooking = (): UseBookingReturn => {
     resetBooking,
     goBack,
     setStep,
+    setAvailabilityResult,
     
     canProceed: canProceed(),
     currentStepData: getCurrentStepData(),

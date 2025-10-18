@@ -13,14 +13,15 @@ type Branch = {
 type BranchSelectionProps = {
   branches: Branch[];
   onSelect: (branch: Branch) => void;
+  categoryName?: string;
 };
 
-export const BranchSelection: React.FC<BranchSelectionProps> = ({ branches, onSelect }) => {
+export const BranchSelection: React.FC<BranchSelectionProps> = ({ branches, onSelect, categoryName = "Branch" }) => {
   return (
     <div className={styles.branchSelection}>
       <h2 className={styles.header}>
         <MapPin className={styles.headerIcon} />
-        Select Bank Branch
+        {categoryName} Branch
       </h2>
       <div className={styles.branchGrid}>
         {branches.map(branch => (

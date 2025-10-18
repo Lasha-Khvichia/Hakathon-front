@@ -35,6 +35,7 @@ const App: React.FC = () => {
     selectedTime,
     bookings,
     loadingState,
+    availabilityResult,
     handleCategorySelect,
     handleServiceSelect,
     handleBranchSelect,
@@ -42,12 +43,17 @@ const App: React.FC = () => {
     handleTimeSelect,
     confirmBooking,
     resetBooking,
-    goBack
+    goBack,
+    canProceed,
+    progressPercentage,
+    setAvailabilityResult,
   } = useBooking();
 
-  const [showTicketModal, setShowTicketModal] = useState<boolean>(false);
+  const [showTicketModal, setShowTicketModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<BookingData | null>(null);
-  const [showAIChat, setShowAIChat] = useState<boolean>(false);
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [showMyBookings, setShowMyBookings] = useState(false);
+  const [geminiApiKey, setGeminiApiKey] = useState('');
 
   const handleShowTicket = (booking: BookingData): void => {
     setSelectedTicket(booking);
@@ -86,6 +92,27 @@ const App: React.FC = () => {
     }
   };
 
+  const getCategoryDisplayName = () => {
+    if (!selectedCategory) return 'ფილიალი - Branch';
+    
+    switch (selectedCategory.id) {
+      case 1: // Bank
+        return 'ბანკის - Bank';
+      case 2: // Health Clinic
+        return 'კლინიკის - Clinic';
+      case 3: // Government Office
+        return 'სამთავრობო ოფისის - Government Office';
+      case 4: // Post Office
+        return 'ფოსტის - Post Office';
+      case 5: // Telecom Center
+        return 'ტელეკომუნიკაციის ცენტრის - Telecom Center';
+      case 6: // Car Service
+        return 'ავტო სერვისის - Car Service';
+      default:
+        return 'ფილიალი - Branch';
+    }
+  };
+
   return (
     <Container>
       <Header/>
@@ -119,6 +146,7 @@ const App: React.FC = () => {
           <BranchSelection 
             branches={getBranchesForCategory()}
             onSelect={handleBranchSelect}
+            categoryName={getCategoryDisplayName()}
           />
         )}
 
@@ -144,23 +172,60 @@ const App: React.FC = () => {
         )}
 
         {step === 6 && selectedCategory && selectedService && selectedDate && selectedTime && (
-          <BookingConfirmation 
-            selectedCategory={{
-              name: selectedCategory.name ?? '',
-              icon: selectedCategory.icon,
-            }}
-            selectedService={{
-              name: selectedService.name ?? '',
-            }}
-            selectedBranch={selectedBranch ? {
-              name: selectedBranch.name ?? '',
-            } : undefined}
-            selectedDate={{
-              full: typeof selectedDate === 'string' ? selectedDate : selectedDate.toLocaleDateString(),
-            }}
-            selectedTime={selectedTime}
-            onConfirm={confirmBooking}
-          />
+          <div>
+            <BookingConfirmation 
+              selectedCategory={{
+                name: selectedCategory.name ?? '',
+                icon: selectedCategory.icon,
+              }}
+              selectedService={{
+                name: selectedService.name ?? '',
+              }}
+              selectedBranch={selectedBranch ? {
+                name: selectedBranch.name ?? '',
+              } : undefined}
+              selectedDate={{
+                full: typeof selectedDate === 'string' ? selectedDate : selectedDate.toLocaleDateString(),
+              }}
+              selectedTime={selectedTime}
+              onConfirm={() => confirmBooking(geminiApiKey)}
+            />
+            
+            {availabilityResult && !availabilityResult.isAvailable && (
+              <div className={styles.availabilityAlert}>
+                <h3>❌ Time Slot Not Available</h3>
+                <p>{availabilityResult.message}</p>
+                
+                {availabilityResult.alternativeSlots && availabilityResult.alternativeSlots.length > 0 && (
+                  <div className={styles.alternativeSlots}>
+                    <h4>✅ Available Alternative Times:</h4>
+                    <div className={styles.slotsList}>
+                      {availabilityResult.alternativeSlots.map((slot: any, index: number) => (
+                        <button 
+                          key={index}
+                          className={styles.alternativeSlot}
+                          onClick={() => {
+                            handleDateSelect(slot.date);
+                            handleTimeSelect(slot.time);
+                            setAvailabilityResult(null);
+                          }}
+                        >
+                          📅 {slot.date} at {slot.time}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {availabilityResult && availabilityResult.isAvailable && (
+              <div className={styles.availabilitySuccess}>
+                <h3>✅ Time Slot Available!</h3>
+                <p>{availabilityResult.message}</p>
+              </div>
+            )}
+          </div>
         )}
 
         {step === 7 && bookings.length > 0 && (
@@ -201,7 +266,7 @@ const App: React.FC = () => {
         ticket={
           selectedTicket
             ? {
-                ticketNumber: selectedTicket.id || 'N/A',
+                ticketNumber: selectedTicket.ticketNumber || 'N/A',
                 category: {
                   icon: selectedTicket.category?.icon,
                   name: selectedTicket.category?.name || 'Unknown',
@@ -220,11 +285,11 @@ const App: React.FC = () => {
         }
       />
 
-      <AIChatButton onClick={() => setShowAIChat(true)} />
+      <AIChatButton onClick={() => setShowAIModal(true)} />
 
       <AIChatModal 
-        isOpen={showAIChat}
-        onClose={() => setShowAIChat(false)}
+        isOpen={showAIModal}
+        onClose={() => setShowAIModal(false)}
       />
     </Container>
   );
