@@ -1,10 +1,6 @@
-// ========================================
-// App Component Styles
-// ========================================
 
-// Variables
-$primary-color: #4f46e5; // indigo-600
-$primary-hover: #4338ca; // indigo-700
+$primary-color: #4f46e5; 
+$primary-hover: #4338ca; 
 $bg-white: #ffffff;
 $text-gray-600: #4b5563;
 $text-gray-800: #1f2937;
@@ -12,20 +8,18 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.
 $border-radius-xl: 0.75rem;
 $transition-default: all 0.3s ease;
 
-// Main Content Container
 .app-main-content {
   background-color: $bg-white;
   border-radius: $border-radius-xl;
   box-shadow: $shadow-lg;
   padding: 1.5rem;
-  min-height: 24rem; // 96 in Tailwind = 384px = 24rem
+  min-height: 24rem; 
 
   @media (max-width: 768px) {
     padding: 1rem;
   }
 }
 
-// Back Button
 .app-back-button {
   display: flex;
   align-items: center;
@@ -55,7 +49,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Responsive Design
 @media (max-width: 640px) {
   .app-main-content {
     min-height: 20rem;
@@ -71,7 +64,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Animation for content transitions
 .app-main-content > div {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -87,7 +79,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Loading State (Optional)
 .app-loading {
   display: flex;
   justify-content: center;
@@ -110,7 +101,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Error State (Optional)
 .app-error {
   display: flex;
   flex-direction: column;
@@ -123,7 +113,7 @@ $transition-default: all 0.3s ease;
   &__icon {
     width: 4rem;
     height: 4rem;
-    color: #ef4444; // red-500
+    color: #ef4444; 
     margin-bottom: 1rem;
   }
 
@@ -257,7 +247,6 @@ $transition-default: all 0.3s ease;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-// Step Title - Center
 .stepTitle {
   flex: 1;
   text-align: center;
@@ -273,7 +262,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Breadcrumbs - Right side
 .breadcrumbs {
   display: flex;
   align-items: center;
@@ -343,7 +331,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Animations
 @keyframes slideInDown {
   from {
     opacity: 0;
@@ -393,7 +380,6 @@ $transition-default: all 0.3s ease;
   }
 }
 
-// Dark mode support
 @media (prefers-color-scheme: dark) {
   .navigationBar {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);

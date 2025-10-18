@@ -1,5 +1,5 @@
 .dateSelection {
-  max-width: 100%;
+  width: 100%;
 }
 
 .header {
@@ -74,7 +74,6 @@
   opacity: 0.9;
 }
 
-// Responsive adjustments
 @media (max-width: 640px) {
   .header {
     font-size: 1.25rem;

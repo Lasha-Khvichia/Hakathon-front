@@ -34,7 +34,7 @@ export const useGeminiAI = () => {
       const aiResponse = await callGeminiAPI(message, geminiApiKey);
       const newAIMessage: ChatMessage = { role: 'ai', text: String(aiResponse) };
       setChatMessages(prev => [...prev, newAIMessage]);
-    } catch (error) {
+    } catch {
       const errorMessage: ChatMessage = { 
         role: 'ai', 
         text: 'Sorry, there was an error connecting to the AI assistant. Please check your API key.' 
