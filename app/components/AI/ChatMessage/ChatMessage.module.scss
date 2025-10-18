@@ -1,0 +1,32 @@
+.chatMessage {
+  display: flex;
+
+  &--user {
+    justify-content: flex-end;
+  }
+
+  &--assistant {
+    justify-content: flex-start;
+  }
+}
+
+.bubble {
+  max-width: 80%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+
+  &--user {
+    background-color: #9333ea;
+    color: white;
+  }
+
+  &--assistant {
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+}
+
+.text {
+  font-size: 0.875rem;
+  white-space: pre-wrap;
+}

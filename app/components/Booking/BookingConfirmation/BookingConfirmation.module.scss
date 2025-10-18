@@ -1,0 +1,80 @@
+.bookingConfirmation {
+  // Main container
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.detailsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.detailItem {
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid;
+
+  &--category {
+    border-left-color: #4f46e5;
+  }
+
+  &--service {
+    border-left-color: #3b82f6;
+  }
+
+  &--branch {
+    border-left-color: #3b82f6;
+  }
+
+  &--date {
+    border-left-color: #9333ea;
+  }
+
+  &--time {
+    border-left-color: #10b981;
+  }
+}
+
+.detailLabel {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.detailValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detailAddress {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+.confirmButton {
+  width: 100%;
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  font-size: 1.125rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s;
+
+  &:hover {
+    background: linear-gradient(to right, #4338ca, #7e22ce);
+  }
+}
