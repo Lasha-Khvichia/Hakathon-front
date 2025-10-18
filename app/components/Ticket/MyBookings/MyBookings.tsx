@@ -1,27 +1,31 @@
 "use client"
 import React from 'react';
- 
 import styles from './MyBookings.module.scss';
 import { TicketCard } from '../TicketCard/TicketCard';
-
-export type Booking = {
-  id: string | number;
-  ticketNumber: string;
-  category: { icon: React.ReactNode; name: string };
-  service: string;
-  date: string;
-  time: string;
-  // add other booking properties as needed
-  [key: string]: unknown;
-};
+import { BookingData } from '../../../types';
 
 interface MyBookingsProps {
-  bookings: Booking[];
-  onShowTicket: (booking: Booking) => void;
+  bookings: BookingData[];
+  onShowTicket: (booking: BookingData) => void;
 }
 
 export const MyBookings: React.FC<MyBookingsProps> = ({ bookings, onShowTicket }) => {
   if (bookings.length === 0) return null;
+
+  const transformBookingForTicket = (booking: BookingData) => ({
+    ticketNumber: booking.id || 'N/A',
+    category: { 
+      icon: booking.category?.icon || null, 
+      name: booking.category?.name || 'Unknown' 
+    },
+    service: { 
+      icon: booking.service?.icon || null, 
+      name: booking.service?.name || 'Unknown' 
+    },
+    branch: booking.branch ? { name: booking.branch.name } : undefined,
+    date: { full: booking.date?.toString() || 'Unknown' },
+    time: booking.time || 'Unknown'
+  });
 
   return (
     <div className={styles.myBookings}>
@@ -29,9 +33,9 @@ export const MyBookings: React.FC<MyBookingsProps> = ({ bookings, onShowTicket }
       <div className={styles.bookingsList}>
         {bookings.map(booking => (
           <TicketCard 
-            key={booking.id} 
-            booking={booking as any} 
-            onShowTicket={onShowTicket as any}
+            key={booking.id}
+            booking={transformBookingForTicket(booking)}
+            onShowTicket={() => onShowTicket(booking)}
           />
         ))}
       </div>

@@ -1,5 +1,4 @@
 "use client"
-// src/services/geminiAPI.ts
 
 interface GeminiPart {
     text: string;

@@ -1,6 +1,3 @@
-// ========================================
-// TypeScript Type Definitions
-// ========================================
 
 export interface Category {
   id: number;

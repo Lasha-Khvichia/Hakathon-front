@@ -21,15 +21,13 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(3);
+  const [notifications] = useState(3);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Set mounted flag after hydration
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Update time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -37,7 +35,6 @@ export const Header: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -74,15 +71,12 @@ export const Header: React.FC = () => {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
-    // Here you can implement actual dark mode logic
   };
 
   return (
     <header className={styles.header}>
-      {/* Top Bar */}
       <div className={styles.topBar}>
         <div className={styles.container}>
-          {/* Left Section - Logo & Time */}
           <div className={styles.leftSection}>
             <div className={styles.logo}>
               <Calendar className={styles.logoIcon} />
@@ -105,14 +99,11 @@ export const Header: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Section - Actions */}
           <div className={styles.rightSection}>
-            {/* Search */}
             <button className={styles.iconButton} title="Search">
               <Search className={styles.icon} />
             </button>
 
-            {/* Dark Mode Toggle */}
             <button 
               className={styles.iconButton} 
               onClick={toggleDarkMode}
@@ -121,7 +112,6 @@ export const Header: React.FC = () => {
               {isDarkMode ? <Sun className={styles.icon} /> : <Moon className={styles.icon} />}
             </button>
 
-            {/* Notifications */}
             <button className={styles.iconButton} title="Notifications">
               <Bell className={styles.icon} />
               {notifications > 0 && (
@@ -129,12 +119,10 @@ export const Header: React.FC = () => {
               )}
             </button>
 
-            {/* Help */}
             <button className={styles.iconButton} title="Help">
               <HelpCircle className={styles.icon} />
             </button>
 
-            {/* Profile Dropdown */}
             <div className={styles.profileSection}>
               <button 
                 className={styles.profileButton}
@@ -186,7 +174,6 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            {/* Mobile Menu Toggle */}
             <button 
               className={styles.mobileMenuButton}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -197,7 +184,6 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Header */}
       <div className={styles.mainHeader}>
         <div className={styles.container}>
           <div className={styles.headerContent}>
@@ -213,7 +199,6 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className={styles.mobileMenu}>
           <button className={styles.mobileMenuItem}>
