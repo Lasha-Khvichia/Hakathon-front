@@ -1,19 +1,11 @@
 "use client"
 import React from 'react';
 import styles from './TicketCard.module.scss';
-
-type Booking = {
-  ticketNumber: string | number;
-  category: { icon: React.ReactNode; name: string };
-  service: { icon: React.ReactNode; name: string };
-  branch?: { name: string };
-  date: { full: string };
-  time: string;
-};
+import { BookingData } from '../../../types';
 
 type Props = {
-  booking: Booking;
-  onShowTicket: (booking: Booking) => void;
+  booking: BookingData;
+  onShowTicket: (booking: BookingData) => void;
 };
 
 export const TicketCard = ({ booking, onShowTicket }: Props) => {
@@ -25,7 +17,7 @@ export const TicketCard = ({ booking, onShowTicket }: Props) => {
             Ticket #{booking.ticketNumber}
           </div>
           <div className={styles.ticketDetail}>
-            {booking.category.icon} {booking.category.name} • {booking.service.icon} {booking.service.name}
+            {booking.category?.icon} {booking.category?.name} • {booking.service?.icon} {booking.service?.name}
           </div>
           {booking.branch && (
             <div className={styles.ticketDetail}>
@@ -33,7 +25,7 @@ export const TicketCard = ({ booking, onShowTicket }: Props) => {
             </div>
           )}
           <div className={styles.ticketDetail}>
-            {booking.date.full} • {booking.time}
+            {typeof booking.date === 'string' ? booking.date : booking.date?.toLocaleDateString()} • {booking.time}
           </div>
         </div>
         <div className={styles.ticketActions}>

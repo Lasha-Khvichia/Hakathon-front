@@ -7,15 +7,23 @@ import { ArrowLeft } from 'lucide-react';
 import styles from './AppComponents.module.scss';
 
 import type { Day } from '../Booking/DateSelection/DateSelection';
- 
+
 import { Header } from '../Layout/Header/Header';
 import { BranchSelection } from '../Booking/BranchSelection/BranchSelection';
-import { bankBranches } from '../data/branches';
+import { 
+  bankBranches, 
+  clinicBranches, 
+  governmentBranches, 
+  postOfficeBranches, 
+  telecomBranches, 
+  carServiceBranches 
+} from '../data/branches';
 import { DateSelection } from '../Booking/DateSelection/DateSelection';
 import { ServiceSelection } from '../Booking/ServiceSelection/ServiceSelection';
 import { serviceOptions } from '../data/services';
 import { useBooking } from '../hooks/useBooking';
-import { Booking, MyBookings } from '../Ticket/MyBookings/MyBookings';
+import { MyBookings } from '../Ticket/MyBookings/MyBookings';
+import { BookingData } from '../../types';
 import { Container } from '../Layout/Container/Container';
 import { ProgressSteps } from '../ProgressSteps/ProgressSteps';
 import { CategorySelection } from '../Layout/CategorySelection/CategorySelection';
@@ -27,6 +35,28 @@ import { BookingSuccess } from '../Booking/BookingSuccess/BookingSuccess';
 import { TicketModal } from '../Ticket/TicketModal/TicketModal';
 import { AIChatButton } from '../AI/AIChatButton';
 import { AIChatModal } from '../AI/AIChatModal/AIChatModal';
+
+// Branch mapping function
+const getBranchesForCategory = (categoryId: string | number | undefined) => {
+  const id = typeof categoryId === 'string' ? parseInt(categoryId) : categoryId;
+  
+  switch (id) {
+    case 1:
+      return bankBranches;
+    case 2:
+      return clinicBranches;
+    case 3:
+      return governmentBranches;
+    case 4:
+      return postOfficeBranches;
+    case 5:
+      return telecomBranches;
+    case 6:
+      return carServiceBranches;
+    default:
+      return [];
+  }
+};
 
 const App: React.FC = () => {
   // Booking Hook
@@ -50,13 +80,13 @@ const App: React.FC = () => {
 
   // Ticket Modal State
   const [showTicketModal, setShowTicketModal] = useState<boolean>(false);
-  const [selectedTicket, setSelectedTicket] = useState<Booking | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<BookingData | null>(null);
 
   // AI Chat State
   const [showAIChat, setShowAIChat] = useState<boolean>(false);
 
   // Ticket Modal Functions
-  const handleShowTicket = (booking: Booking): void => {
+  const handleShowTicket = (booking: BookingData): void => {
     setSelectedTicket(booking);
     setShowTicketModal(true);
   };
@@ -78,13 +108,13 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <Header/>
+      <Header />
 
       {/* Progress Steps */}
       {step < 7 && (
-        <ProgressSteps 
-          steps={getProgressSteps()} 
-          currentStep={step} 
+        <ProgressSteps
+          steps={getProgressSteps()}
+          currentStep={step}
         />
       )}
 
@@ -103,15 +133,15 @@ const App: React.FC = () => {
 
         {/* Step 1: Category Selection */}
         {step === 1 && (
-          <CategorySelection 
-            categories={categories as any}
+          <CategorySelection
+            categories={categories}
             onSelect={handleCategorySelect}
           />
         )}
 
         {/* Step 2: Service Selection */}
         {step === 2 && selectedCategory && (
-          <ServiceSelection 
+          <ServiceSelection
             category={selectedCategory}
             services={serviceOptions[selectedCategory.id! as keyof typeof serviceOptions] || []}
             onSelect={handleServiceSelect}
@@ -120,21 +150,22 @@ const App: React.FC = () => {
 
         {/* Step 3: Branch Selection */}
         {step === 3 && (
-          <BranchSelection 
-            branches={bankBranches}
+          <BranchSelection
+            branches={getBranchesForCategory(selectedCategory?.id)}
             onSelect={handleBranchSelect}
+            categoryName={selectedCategory?.name}
           />
         )}
         {/* Step 4: Date Selection */}
         {step === 4 && (
-          <DateSelection 
+          <DateSelection
             onSelect={(day: Day) => handleDateSelect(`${day.day} ${day.num}, ${day.month}`)}
           />
         )}
 
         {/* Step 5: Time Selection */}
         {step === 5 && (
-          <TimeSelection 
+          <TimeSelection
             timeSlots={timeSlots}
             onSelect={handleTimeSelect}
           />
@@ -142,7 +173,7 @@ const App: React.FC = () => {
 
         {/* Step 6: Booking Confirmation */}
         {step === 6 && selectedCategory && selectedService && selectedDate && selectedTime && (
-          <BookingConfirmation 
+          <BookingConfirmation
             selectedCategory={{
               name: selectedCategory.name ?? '',
               icon: selectedCategory.icon,
@@ -163,7 +194,7 @@ const App: React.FC = () => {
 
         {/* Step 7: Booking Success */}
         {step === 7 && bookings.length > 0 && (
-          <BookingSuccess 
+          <BookingSuccess
             booking={{
               ticketNumber: bookings[bookings.length - 1].ticketNumber,
               category: {
@@ -176,7 +207,7 @@ const App: React.FC = () => {
                 name: bookings[bookings.length - 1].branch?.name ?? '',
               } : null,
               date: {
-                full: typeof bookings[bookings.length - 1].date === 'string' 
+                full: typeof bookings[bookings.length - 1].date === 'string'
                   ? bookings[bookings.length - 1].date as string
                   : (bookings[bookings.length - 1].date as Date)?.toLocaleDateString() ?? '',
               },
@@ -189,43 +220,37 @@ const App: React.FC = () => {
 
       {/* My Bookings - Only show on step 1 */}
       {step === 1 && (
-        <MyBookings 
-          bookings={bookings.map(booking => ({
-            id: booking.id,
-            ticketNumber: booking.ticketNumber.toString(),
-            category: {
-              icon: booking.category?.icon || '📋',
-              name: booking.category?.name ?? '',
-            },
-            service: booking.service?.name ?? '',
-            date: typeof booking.date === 'string' ? booking.date : booking.date?.toLocaleDateString() ?? '',
-            time: booking.time ?? '',
-          }))}
+        <MyBookings
+          bookings={bookings as BookingData[]}
           onShowTicket={handleShowTicket}
         />
       )}
 
       {/* Ticket Modal */}
-      <TicketModal 
+      <TicketModal
         isOpen={showTicketModal}
         onClose={handleCloseTicketModal}
         ticket={
-          selectedTicket
+          selectedTicket && selectedTicket.category && selectedTicket.service
             ? {
-                ticketNumber: selectedTicket.ticketNumber,
-                category: {
-                  icon: selectedTicket.category.icon,
-                  name: selectedTicket.category.name,
-                },
-                service: {
-                  name: typeof selectedTicket.service === 'string' ? selectedTicket.service : selectedTicket.service,
-                },
-                branch: null,
-                date: {
-                  full: selectedTicket.date,
-                },
-                time: selectedTicket.time,
-              }
+              ticketNumber: selectedTicket.ticketNumber,
+              category: {
+                icon: selectedTicket.category.icon,
+                name: selectedTicket.category.name,
+              },
+              service: {
+                name: selectedTicket.service.name || '',
+              },
+              branch: selectedTicket.branch ? {
+                name: selectedTicket.branch.name || '',
+              } : null,
+              date: {
+                full: typeof selectedTicket.date === 'string'
+                  ? selectedTicket.date
+                  : selectedTicket.date?.toLocaleDateString() || '',
+              },
+              time: selectedTicket.time || '',
+            }
             : null
         }
       />
@@ -234,7 +259,7 @@ const App: React.FC = () => {
       <AIChatButton onClick={() => setShowAIChat(true)} />
 
       {/* AI Chat Modal */}
-      <AIChatModal 
+      <AIChatModal
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
       />

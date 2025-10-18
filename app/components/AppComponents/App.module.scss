@@ -19,6 +19,7 @@ $transition-default: all 0.3s ease;
   box-shadow: $shadow-lg;
   padding: 1.5rem;
   min-height: 24rem; // 96 in Tailwind = 384px = 24rem
+  width: 100%;
 
   @media (max-width: 768px) {
     padding: 1rem;

@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(3);
+  const [notifications] = useState(3);
   const [isMounted, setIsMounted] = useState(false);
 
   // Set mounted flag after hydration

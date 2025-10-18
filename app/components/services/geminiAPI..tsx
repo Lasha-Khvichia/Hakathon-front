@@ -64,3 +64,98 @@ Provide a helpful, concise answer about the services, booking process, or genera
         throw error;
     }
 };
+
+export const checkBookingAvailability = async (
+    bookingData: {
+        category: string;
+        branch: string;
+        service: string;
+        date: string;
+        time: string;
+    },
+    apiKey: string
+): Promise<{
+    isAvailable: boolean;
+    message: string;
+    alternativeSlots?: Array<{ date: string; time: string; }>;
+}> => {
+    if (!apiKey) {
+        throw new Error("API key is required");
+    }
+
+    // Simulate random availability (in real app, this would check your database)
+    const isAvailable = Math.random() > 0.3; // 70% chance available
+
+    const prompt = `You are a booking availability checker. 
+
+Booking Request:
+- Category: ${bookingData.category}
+- Branch: ${bookingData.branch}
+- Service: ${bookingData.service}
+- Date: ${bookingData.date}
+- Time: ${bookingData.time}
+
+${isAvailable 
+    ? `The requested time slot IS AVAILABLE. Generate a confirmation message with ticket number ${Math.floor(Math.random() * 2000) + 1}.`
+    : `The requested time slot is NOT AVAILABLE. Suggest 3 alternative free time slots for the same date or next available dates.`
+}
+
+Respond in JSON format:
+{
+    "isAvailable": ${isAvailable},
+    "message": "Your response message here",
+    "alternativeSlots": ${!isAvailable ? '[{"date": "YYYY-MM-DD", "time": "HH:MM"}, ...]' : 'null'}
+}`;
+
+    try {
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }]
+                })
+            }
+        );
+
+        const data: GeminiResponse = await response.json();
+
+        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+            const responseText = data.candidates[0].content.parts[0].text;
+            
+            // Try to parse JSON response
+            try {
+                const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    const parsedResponse = JSON.parse(jsonMatch[0]);
+                    return parsedResponse;
+                }
+            } catch {
+                console.warn('Failed to parse JSON response, using fallback');
+            }
+            
+            // Fallback response
+            return {
+                isAvailable: isAvailable,
+                message: responseText,
+                alternativeSlots: !isAvailable ? [
+                    { date: bookingData.date, time: "10:00" },
+                    { date: bookingData.date, time: "14:00" },
+                    { date: bookingData.date, time: "16:30" }
+                ] : undefined
+            };
+        } else {
+            throw new Error("Invalid response from API");
+        }
+    } catch (error) {
+        console.error('Booking Availability Check Error:', error);
+        throw error;
+    }
+};

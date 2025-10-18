@@ -5,7 +5,14 @@
   border: none;
   cursor: pointer;
  }
+ 
+ html, body {
+  width: 100%;
+  overflow-x: hidden;
+ }
+ 
  body {
   font-family: sans-serif;
-  
+  width: 100vw;
+  min-height: 100vh;
 }

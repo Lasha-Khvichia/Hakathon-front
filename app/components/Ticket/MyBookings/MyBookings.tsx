@@ -3,21 +3,11 @@ import React from 'react';
  
 import styles from './MyBookings.module.scss';
 import { TicketCard } from '../TicketCard/TicketCard';
-
-export type Booking = {
-  id: string | number;
-  ticketNumber: string;
-  category: { icon: React.ReactNode; name: string };
-  service: string;
-  date: string;
-  time: string;
-  // add other booking properties as needed
-  [key: string]: unknown;
-};
+import { BookingData } from '../../../types';
 
 interface MyBookingsProps {
-  bookings: Booking[];
-  onShowTicket: (booking: Booking) => void;
+  bookings: BookingData[];
+  onShowTicket: (booking: BookingData) => void;
 }
 
 export const MyBookings: React.FC<MyBookingsProps> = ({ bookings, onShowTicket }) => {
@@ -30,8 +20,8 @@ export const MyBookings: React.FC<MyBookingsProps> = ({ bookings, onShowTicket }
         {bookings.map(booking => (
           <TicketCard 
             key={booking.id} 
-            booking={booking as any} 
-            onShowTicket={onShowTicket as any}
+            booking={booking} 
+            onShowTicket={onShowTicket}
           />
         ))}
       </div>
