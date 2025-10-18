@@ -63,14 +63,15 @@ export interface BookingData {
 export interface LoadingState {
   isLoading: boolean;
   error?: string | null;
-    selectedCategory: Category | null;
-  selectedService: Service | null;
-  selectedBranch: Branch | null;
-  selectedDate: string | Date | null;
-  selectedTime: string | null;
 }
- 
- 
+
+export interface Day {
+  day: string;
+  num: number | string;
+  month: string;
+  year?: number;
+  full?: string;
+}
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -88,10 +89,5 @@ export interface ComponentWithChildren {
 
 export interface ComponentWithClassName {
   className?: string;
-}
-
-export interface LoadingState {
-  isLoading: boolean;
-  error?: string | null;
 }
  
