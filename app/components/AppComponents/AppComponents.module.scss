@@ -1,0 +1,38 @@
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background: transparent;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #1f2937;
+  }
+
+  &:active {
+    transform: translateY(1px);
+    background: #f3f4f6;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
