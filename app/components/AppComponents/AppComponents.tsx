@@ -162,8 +162,9 @@ const App: React.FC = () => {
         {/* Step 3: Branch Selection */}
         {step === 3 && (
           <BranchSelection 
-            branches={bankBranches}
+            branches={getBranchesForCategory()}
             onSelect={handleBranchSelect}
+            categoryName={selectedCategory?.name}
           />
         )}
         {/* Step 4: Date Selection */}
