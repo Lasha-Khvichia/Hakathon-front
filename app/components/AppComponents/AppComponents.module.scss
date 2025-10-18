@@ -1,3 +1,38 @@
+.mainContent {
+  width: 100%;
+  margin: 0;
+  padding: 1rem;
+  
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
+  
+  @media (min-width: 1200px) {
+    padding: 1.5rem;
+  }
+}
+
+.errorMessage {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.loadingMessage {
+  background: #e0f2fe;
+  border: 1px solid #b3e5fc;
+  color: #0277bd;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
 .backButton {
   display: flex;
   align-items: center;
@@ -29,10 +64,102 @@
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background: transparent;
+      border-color: #e5e7eb;
+      color: #374151;
+      transform: none;
+    }
+  }
 }
 
 .backIcon {
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
+}
+
+.availabilityAlert {
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.125rem;
+    color: #dc2626;
+  }
+  
+  p {
+    margin: 0 0 1rem 0;
+    color: #7f1d1d;
+    line-height: 1.5;
+  }
+}
+
+.availabilitySuccess {
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.125rem;
+    color: #16a34a;
+  }
+  
+  p {
+    margin: 0;
+    color: #15803d;
+    line-height: 1.5;
+  }
+}
+
+.alternativeSlots {
+  margin-top: 1rem;
+  
+  h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    color: #059669;
+  }
+}
+
+.slotsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alternativeSlot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 0.5rem;
+  color: #065f46;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.875rem;
+  
+  &:hover {
+    background: #d1fae5;
+    border-color: #6ee7b7;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
 }

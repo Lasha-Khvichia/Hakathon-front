@@ -1,5 +1,5 @@
 export const serviceOptions = {
-  1: [ // ბანკი - Bank
+  1: [ 
     { id: 1, name: 'ანგარიშის გახსნა - Open New Account', icon: '📝' },
     { id: 2, name: 'ფულის შეტანა - Deposit Money', icon: '💰' },
     { id: 3, name: 'ფულის გამოტანა - Withdraw Money', icon: '💵' },
@@ -8,7 +8,7 @@ export const serviceOptions = {
     { id: 6, name: 'გადარიცხვა - Money Transfer', icon: '💸' }
   ],
   
-  2: [ // სამედიცინო კლინიკა - Health Clinic
+  2: [ 
     { id: 1, name: 'ზოგადი შემოწმება - General Checkup', icon: '🩺' },
     { id: 2, name: 'სტომატოლოგია - Dental Care', icon: '🦷' },
     { id: 3, name: 'ვაქცინაცია - Vaccination', icon: '💉' },
@@ -17,7 +17,7 @@ export const serviceOptions = {
     { id: 6, name: 'გადაუდებელი დახმარება - Emergency', icon: '🚑' }
   ],
   
-  3: [ // სახელმწიფო უწყება - Government Office
+  3: [ 
     { id: 1, name: 'პირადობა - ID Card', icon: '🪪' },
     { id: 2, name: 'პასპორტი - Passport', icon: '📘' },
     { id: 3, name: 'მართვის მოწმობა - Driver License', icon: '🚗' },
@@ -26,7 +26,7 @@ export const serviceOptions = {
     { id: 6, name: 'საგადასახადო დოკუმენტები - Tax Documents', icon: '📄' }
   ],
   
-  4: [ // საფოსტო ოფისი - Post Office
+  4: [ 
     { id: 1, name: 'ამანათის გაგზავნა - Send Package', icon: '📦' },
     { id: 2, name: 'ამანათის მიღება - Receive Package', icon: '📬' },
     { id: 3, name: 'მარკების ყიდვა - Buy Stamps', icon: '✉️' },
@@ -35,7 +35,7 @@ export const serviceOptions = {
     { id: 6, name: 'ფულადი გზავნილი - Money Order', icon: '💰' }
   ],
   
-  5: [ // ტელეკომ ცენტრი - Telecom Center
+  5: [ 
     { id: 1, name: 'SIM ბარათი - New SIM Card', icon: '📱' },
     { id: 2, name: 'ტარიფის შეცვლა - Change Plan', icon: '📊' },
     { id: 3, name: 'გადახდა - Pay Bill', icon: '💳' },
@@ -44,7 +44,7 @@ export const serviceOptions = {
     { id: 6, name: 'შეკეთება - Device Repair', icon: '🔨' }
   ],
   
-  6: [ // ავტო სერვისი - Car Service
+  6: [ 
     { id: 1, name: 'ზეთის გამოცვლა - Oil Change', icon: '🛢️' },
     { id: 2, name: 'საბურავები - Tire Service', icon: '⚙️' },
     { id: 3, name: 'რეცხვა - Car Wash', icon: '🚿' },

@@ -2,37 +2,12 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
 import styles from './DateSelection.module.scss';
-
-export interface Day {
-  date: Date;
-  day: string;
-  num: number;
-  month: string;
-  full: string;
-}
+import { getNextDays } from '../../../utils/dateHelper';
+import type { DateInfo } from '../../../types';
 
 interface DateSelectionProps {
-  onSelect: (day: Day) => void;
+  onSelect: (day: DateInfo) => void;
 }
-
-const getNextDays = (numDays: number = 14): Day[] => {
-  const days: Day[] = [];
-  const today = new Date();
-  
-  for (let i = 0; i < numDays; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-    days.push({
-      date: date,
-      day: date.toLocaleDateString('en-US', { weekday: 'short' }),
-      num: date.getDate(),
-      month: date.toLocaleDateString('en-US', { month: 'short' }),
-      full: date.toLocaleDateString('en-US')
-    });
-  }
-  
-  return days;
-};
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ onSelect }) => {
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);

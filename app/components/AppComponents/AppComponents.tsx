@@ -1,29 +1,19 @@
 
-"use client"
-
+"use client";
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-// Styles
 import styles from './AppComponents.module.scss';
 
 import type { Day } from '../Booking/DateSelection/DateSelection';
-
+ 
 import { Header } from '../Layout/Header/Header';
 import { BranchSelection } from '../Booking/BranchSelection/BranchSelection';
-import { 
-  bankBranches, 
-  clinicBranches, 
-  governmentBranches, 
-  postOfficeBranches, 
-  telecomBranches, 
-  carServiceBranches 
-} from '../data/branches';
+import { bankBranches } from '../data/branches';
 import { DateSelection } from '../Booking/DateSelection/DateSelection';
 import { ServiceSelection } from '../Booking/ServiceSelection/ServiceSelection';
 import { serviceOptions } from '../data/services';
 import { useBooking } from '../hooks/useBooking';
-import { MyBookings } from '../Ticket/MyBookings/MyBookings';
-import { BookingData } from '../../types';
+import { Booking, MyBookings } from '../Ticket/MyBookings/MyBookings';
 import { Container } from '../Layout/Container/Container';
 import { ProgressSteps } from '../ProgressSteps/ProgressSteps';
 import { CategorySelection } from '../Layout/CategorySelection/CategorySelection';
@@ -36,30 +26,7 @@ import { TicketModal } from '../Ticket/TicketModal/TicketModal';
 import { AIChatButton } from '../AI/AIChatButton';
 import { AIChatModal } from '../AI/AIChatModal/AIChatModal';
 
-// Branch mapping function
-const getBranchesForCategory = (categoryId: string | number | undefined) => {
-  const id = typeof categoryId === 'string' ? parseInt(categoryId) : categoryId;
-  
-  switch (id) {
-    case 1:
-      return bankBranches;
-    case 2:
-      return clinicBranches;
-    case 3:
-      return governmentBranches;
-    case 4:
-      return postOfficeBranches;
-    case 5:
-      return telecomBranches;
-    case 6:
-      return carServiceBranches;
-    default:
-      return [];
-  }
-};
-
 const App: React.FC = () => {
-  // Booking Hook
   const {
     step,
     selectedCategory,
@@ -68,6 +35,8 @@ const App: React.FC = () => {
     selectedDate,
     selectedTime,
     bookings,
+    loadingState,
+    availabilityResult,
     handleCategorySelect,
     handleServiceSelect,
     handleBranchSelect,
@@ -75,18 +44,21 @@ const App: React.FC = () => {
     handleTimeSelect,
     confirmBooking,
     resetBooking,
-    goBack
+    goBack,
+    canProceed,
+    progressPercentage,
+    setAvailabilityResult,
   } = useBooking();
 
   // Ticket Modal State
   const [showTicketModal, setShowTicketModal] = useState<boolean>(false);
-  const [selectedTicket, setSelectedTicket] = useState<BookingData | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<Booking | null>(null);
 
   // AI Chat State
   const [showAIChat, setShowAIChat] = useState<boolean>(false);
 
   // Ticket Modal Functions
-  const handleShowTicket = (booking: BookingData): void => {
+  const handleShowTicket = (booking: Booking): void => {
     setSelectedTicket(booking);
     setShowTicketModal(true);
   };
@@ -96,19 +68,57 @@ const App: React.FC = () => {
     setSelectedTicket(null);
   };
 
-  // Progress Steps
   const getProgressSteps = (): string[] => {
-    const steps: string[] = ['Category', 'Service'];
-    if (selectedCategory?.hasBranches) {
-      steps.push('Branch');
-    }
-    steps.push('Date', 'Time', 'Confirm');
+    const steps: string[] = ['Category', 'Branch', 'Service', 'Date', 'Time', 'Confirm'];
     return steps;
+  };
+
+  const getBranchesForCategory = () => {
+    if (!selectedCategory) return [];
+    
+    switch (selectedCategory.id) {
+      case 1: // Bank
+        return bankBranches;
+      case 2: // Health Clinic
+        return clinicBranches;
+      case 3: // Government Office
+        return GovernmentBranches;
+      case 4: // Post Office
+        return PostOfficeBranches;
+      case 5: // Telecom Center
+        return TelecomBranches;
+      case 6: // Car Service
+        return CarServiceBranches;
+      default:
+        // For categories without specific branches, show a general location option
+        return [{ id: 1, name: 'General Location', address: 'Main Office', icon: '🏢' }];
+    }
+  };
+
+  const getCategoryDisplayName = () => {
+    if (!selectedCategory) return 'ფილიალი - Branch';
+    
+    switch (selectedCategory.id) {
+      case 1: // Bank
+        return 'ბანკის - Bank';
+      case 2: // Health Clinic
+        return 'კლინიკის - Clinic';
+      case 3: // Government Office
+        return 'სამთავრობო ოფისის - Government Office';
+      case 4: // Post Office
+        return 'ფოსტის - Post Office';
+      case 5: // Telecom Center
+        return 'ტელეკომუნიკაციის ცენტრის - Telecom Center';
+      case 6: // Car Service
+        return 'ავტო სერვისის - Car Service';
+      default:
+        return 'ფილიალი - Branch';
+    }
   };
 
   return (
     <Container>
-      <Header />
+      <Header/>
 
       {/* Progress Steps */}
       {step < 7 && (
@@ -118,30 +128,28 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* Main Content */}
-      <div className="app-main-content">
-        {/* Back Button */}
-        {step > 1 && step < 7 && (
+      <div className={styles.mainContent}>
+        {step > BOOKING_STEPS.CATEGORY_SELECTION && step < BOOKING_STEPS.SUCCESS && (
           <button
             onClick={goBack}
             className={styles.backButton}
+            disabled={loadingState.isLoading}
           >
             <ArrowLeft className={styles.backIcon} />
             Back
           </button>
         )}
 
-        {/* Step 1: Category Selection */}
         {step === 1 && (
-          <CategorySelection
-            categories={categories}
+          <CategorySelection 
+            categories={categories as any}
             onSelect={handleCategorySelect}
           />
         )}
 
         {/* Step 2: Service Selection */}
         {step === 2 && selectedCategory && (
-          <ServiceSelection
+          <ServiceSelection 
             category={selectedCategory}
             services={serviceOptions[selectedCategory.id! as keyof typeof serviceOptions] || []}
             onSelect={handleServiceSelect}
@@ -150,20 +158,18 @@ const App: React.FC = () => {
 
         {/* Step 3: Branch Selection */}
         {step === 3 && (
-          <BranchSelection
-            branches={getBranchesForCategory(selectedCategory?.id)}
+          <BranchSelection 
+            branches={bankBranches}
             onSelect={handleBranchSelect}
-            categoryName={selectedCategory?.name}
           />
         )}
         {/* Step 4: Date Selection */}
         {step === 4 && (
-          <DateSelection
+          <DateSelection 
             onSelect={(day: Day) => handleDateSelect(`${day.day} ${day.num}, ${day.month}`)}
           />
         )}
 
-        {/* Step 5: Time Selection */}
         {step === 5 && (
           <TimeSelection
             timeSlots={timeSlots}
@@ -171,9 +177,8 @@ const App: React.FC = () => {
           />
         )}
 
-        {/* Step 6: Booking Confirmation */}
         {step === 6 && selectedCategory && selectedService && selectedDate && selectedTime && (
-          <BookingConfirmation
+          <BookingConfirmation 
             selectedCategory={{
               name: selectedCategory.name ?? '',
               icon: selectedCategory.icon,
@@ -218,48 +223,52 @@ const App: React.FC = () => {
         )}
       </div>
 
-      {/* My Bookings - Only show on step 1 */}
       {step === 1 && (
-        <MyBookings
-          bookings={bookings as BookingData[]}
+        <MyBookings 
+          bookings={bookings.map(booking => ({
+            id: booking.id,
+            ticketNumber: booking.ticketNumber.toString(),
+            category: {
+              icon: booking.category?.icon || '📋',
+              name: booking.category?.name ?? '',
+            },
+            service: booking.service?.name ?? '',
+            date: typeof booking.date === 'string' ? booking.date : booking.date?.toLocaleDateString() ?? '',
+            time: booking.time ?? '',
+          }))}
           onShowTicket={handleShowTicket}
         />
       )}
 
       {/* Ticket Modal */}
-      <TicketModal
+      <TicketModal 
         isOpen={showTicketModal}
         onClose={handleCloseTicketModal}
         ticket={
           selectedTicket && selectedTicket.category && selectedTicket.service
             ? {
-              ticketNumber: selectedTicket.ticketNumber,
-              category: {
-                icon: selectedTicket.category.icon,
-                name: selectedTicket.category.name,
-              },
-              service: {
-                name: selectedTicket.service.name || '',
-              },
-              branch: selectedTicket.branch ? {
-                name: selectedTicket.branch.name || '',
-              } : null,
-              date: {
-                full: typeof selectedTicket.date === 'string'
-                  ? selectedTicket.date
-                  : selectedTicket.date?.toLocaleDateString() || '',
-              },
-              time: selectedTicket.time || '',
-            }
+                ticketNumber: selectedTicket.ticketNumber,
+                category: {
+                  icon: selectedTicket.category.icon,
+                  name: selectedTicket.category.name,
+                },
+                service: {
+                  name: typeof selectedTicket.service === 'string' ? selectedTicket.service : selectedTicket.service,
+                },
+                branch: null,
+                date: {
+                  full: selectedTicket.date,
+                },
+                time: selectedTicket.time,
+              }
             : null
         }
       />
 
-      {/* AI Chat Button */}
-      <AIChatButton onClick={() => setShowAIChat(true)} />
+      <AIChatButton onClick={() => setShowAIModal(true)} />
 
       {/* AI Chat Modal */}
-      <AIChatModal
+      <AIChatModal 
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
       />

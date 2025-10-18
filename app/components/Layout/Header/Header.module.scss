@@ -8,7 +8,6 @@
  
 }
 
-// Top Bar|
 .topBar {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -26,7 +25,6 @@
   align-items: center;
 }
 
-// Left Section
 .leftSection {
   display: flex;
   align-items: center;
@@ -71,7 +69,6 @@
   font-weight: 500;
 }
 
-// Time Display
 .timeDisplay {
   display: none;
   align-items: center;
@@ -109,7 +106,6 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-// Right Section
 .rightSection {
   display: flex;
   align-items: center;
@@ -164,7 +160,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-// Profile Section
 .profileSection {
   position: relative;
   margin-left: 0.5rem;
@@ -229,7 +224,6 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-// Dropdown
 .dropdown {
   position: absolute;
   top: calc(100% + 0.75rem);
@@ -244,7 +238,6 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-// Dropdown Header
 .dropdownHeader {
   display: flex;
   align-items: center;
@@ -298,7 +291,6 @@
   text-overflow: ellipsis;
 }
 
-// Dropdown Items
 .dropdownItem {
   display: flex;
   align-items: center;
@@ -355,7 +347,6 @@
   border-top: 1px solid #e5e7eb;
 }
 
-// Mobile Menu Button
 .mobileMenuButton {
   display: none;
   width: 2.5rem;
@@ -381,7 +372,6 @@
   }
 }
 
-// Main Header
 .mainHeader {
   padding: 2rem 0;
 }
@@ -428,7 +418,6 @@
   }
 }
 
-// Stats
 .stats {
   display: grid;
   position: relative;
@@ -481,7 +470,6 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-// Mobile Menu
 .mobileMenu {
   display: none;
   background: white;
@@ -534,7 +522,6 @@
   border-radius: 9999px;
 }
 
-// Animations
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;
@@ -546,7 +533,6 @@
   }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   .dropdown {
     right: -1rem;

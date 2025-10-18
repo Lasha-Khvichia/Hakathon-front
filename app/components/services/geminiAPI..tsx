@@ -1,5 +1,5 @@
 "use client"
-// src/services/geminiAPI.ts
+import axios from 'axios';
 
 interface GeminiPart {
     text: string;
@@ -23,17 +23,12 @@ export const callGeminiAPI = async (message: string, apiKey: string): Promise<st
     }
 
     try {
-        const response = await fetch(
+        const response = await axios.post(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
             {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `You are a helpful assistant for an online queuing system. 
+                contents: [{
+                    parts: [{
+                        text: `You are a helpful assistant for an online queuing system. 
               
 Available services:
 - City Bank: Open New Account, Deposit Money, Withdraw Money, Get Loan, Credit Card Service, Money Transfer
@@ -46,13 +41,17 @@ Available services:
 User question: ${message}
 
 Provide a helpful, concise answer about the services, booking process, or general assistance.`
-                        }]
                     }]
-                })
+                }]
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             }
         );
 
-        const data: GeminiResponse = await response.json();
+        const data: GeminiResponse = response.data;
 
         if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
             return data.candidates[0].content.parts[0].text;
@@ -108,24 +107,24 @@ Respond in JSON format:
 }`;
 
     try {
-        const response = await fetch(
+        const response = await axios.post(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
             {
-                method: 'POST',
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }]
+            },
+            {
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }]
-                })
+                }
             }
         );
 
-        const data: GeminiResponse = await response.json();
+        const data: GeminiResponse = response.data;
+ 
 
         if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
             const responseText = data.candidates[0].content.parts[0].text;
@@ -137,7 +136,9 @@ Respond in JSON format:
                     const parsedResponse = JSON.parse(jsonMatch[0]);
                     return parsedResponse;
                 }
-            } catch {
+ 
+            } catch (parseError) {
+ 
                 console.warn('Failed to parse JSON response, using fallback');
             }
             
