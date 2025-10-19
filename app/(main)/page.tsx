@@ -1,6 +1,6 @@
 import React from 'react';
-import Auth from '../components/Auth/Auth'; 
 import AppComponents from '../components/AppComponents/AppComponents';
+import styles from './page.module.scss';
 
 
 export default function Home() {
@@ -11,5 +11,3 @@ export default function Home() {
     </div>
   );
 };
-
-export default Page;
