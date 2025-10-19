@@ -2,6 +2,7 @@ import { BookingTypes } from "../BackAPI/BookingTypes";
 import { CategoryTypes } from "../BackAPI/CategoryTypes";
 import { CompanyTypes } from "../BackAPI/CompanyTypes";
 import { RolesEnum, UserTypes } from "../BackAPI/UserTypes";
+import { ReactNode } from 'react';
 
  
 
@@ -15,6 +16,14 @@ export interface Day {
   num: number;
   month: string;
   year: number;
+}
+
+export interface DateInfo {
+  day: string;
+  num: number;
+  month: string;
+  year: number;
+  full: string;
 }
 
 export interface Category {

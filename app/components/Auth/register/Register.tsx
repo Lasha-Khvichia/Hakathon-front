@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from 'react';
  
-import styles from './Auth.module.scss';
+import styles from '../Auth.module.scss';
 
 export const Register: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin }) => {
   const [name, setName] = useState('');

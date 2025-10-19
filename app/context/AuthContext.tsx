@@ -1,5 +1,6 @@
 // context/AuthContext.tsx
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useContext, ReactNode } from 'react';
 import { UserTypes } from '../BackAPI/UserTypes';
 
@@ -18,13 +19,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // TODO: Add auth logic
   const mockAuth: AuthContextType = {
-    user: null,
+    // Temporary dev bypass: treat user as authenticated so the app doesn't show auth modals.
+    // Remove this bypass and implement real auth for production.
+    user: {
+      id: 1,
+      name: 'Dev User',
+      email: 'dev@example.com',
+      role: 'USER',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as any,
     loading: false,
     error: null,
     login: async () => {},
     register: async () => {},
     logout: async () => {},
-    isAuthenticated: false,
+    isAuthenticated: true,
   };
 
   return (

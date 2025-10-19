@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import styles from './AppComponents.module.scss';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Day } from '../../types';
 import { BOOKING_STEPS } from '../../constants';
 import { Header } from '../Layout/Header/Header';
@@ -24,8 +25,8 @@ import { TicketModal } from '../Ticket/TicketModal/TicketModal';
 import { AIChatButton } from '../AI/AIChatButton';
 import { AIChatModal } from '../AI/AIChatModal/AIChatModal';
 import { useAuthContext } from '../../context/AuthContext';
-import { Login } from '../Auth/login/logint';
 import { Register } from '../Auth/register/Register';
+import { Login } from '../Auth/login/Logint';
 
 
 const App: React.FC = () => {
@@ -41,6 +42,7 @@ const App: React.FC = () => {
     selectedDate,
     selectedTime,
     bookings,
+    categories,
     companies,
     loading,
     error,
@@ -53,6 +55,9 @@ const App: React.FC = () => {
     resetBooking,
     goBack,
   } = useBooking();
+
+  // work around literal union typing from the hook by using a plain number for comparisons
+  const stepNumber: number = Number(step as unknown as number);
 
   // Ticket Modal State
   const [showTicketModal, setShowTicketModal] = useState<boolean>(false);
@@ -115,15 +120,15 @@ const App: React.FC = () => {
       <Header />
 
       {/* Progress Steps */}
-      {step < 7 && (
+      {stepNumber < 7 && (
         <ProgressSteps
           steps={getProgressSteps()}
-          currentStep={step}
+          currentStep={stepNumber}
         />
       )}
 
       <div className={styles.mainContent}>
-        {step > BOOKING_STEPS.CATEGORY_SELECTION && step < BOOKING_STEPS.SUCCESS && (
+        {stepNumber > BOOKING_STEPS.CATEGORY_SELECTION && stepNumber < BOOKING_STEPS.SUCCESS && (
           <button
             onClick={goBack}
             className={styles.backButton}
@@ -136,50 +141,52 @@ const App: React.FC = () => {
         {loading && <div className={styles.loading}>Loading...</div>}
         {error && <div className={styles.error}>{error}</div>}
 
-        {step === 1 && (
+        {stepNumber === BOOKING_STEPS.CATEGORY_SELECTION && (
           <CategorySelection
-            categories={serviceOptions as any}
+            categories={categories}
             onSelect={handleCategorySelect}
           />
         )}
 
         {/* Step 2: Service Selection */}
-        {step === 2 && selectedCategory && (
+        {stepNumber === BOOKING_STEPS.SERVICE_SELECTION && selectedCategory && (
           <ServiceSelection
-            category={selectedCategory}
-            services={serviceOptions[selectedCategory.id! as keyof typeof serviceOptions] || []}
-            onSelect={handleServiceSelect}
+            // ServiceSelection expects a small category object (icon/color). Create a lightweight map.
+            category={{ icon: String(selectedCategory.name).charAt(0), color: 'blue' } as any}
+            services={serviceOptions[selectedCategory.id as keyof typeof serviceOptions] as any || []}
+            onSelect={handleServiceSelect as any}
           />
         )}
 
         {/* Step 3: Branch Selection */}
-        {step === 3 && (
+        {stepNumber === BOOKING_STEPS.BRANCH_SELECTION && (
           <BranchSelection
-            branches={getBranchesForCategory()}
-            onSelect={handleBranchSelect}
+            categoryId={selectedCategory?.id}
+            onSelect={handleBranchSelect as any}
             categoryName={selectedCategory?.name}
           />
         )}
 
         {/* Step 4: Date Selection */}
-        {step === 4 && (
+        {stepNumber === BOOKING_STEPS.DATE_SELECTION && (
           <DateSelection
-            onSelect={(day: Day) => handleDateSelect(`${day.day} ${day.num}, ${day.month}`)}
+            onSelect={(day: any) => handleDateSelect(day.full ?? `${day.day} ${day.num}, ${day.month}`)}
           />
         )}
 
-        {step === 5 && (
+        {stepNumber === BOOKING_STEPS.TIME_SELECTION && (
           <TimeSelection
             timeSlots={timeSlots}
             onSelect={handleTimeSelect}
           />
         )}
 
-        {step === 6 && selectedCategory && selectedService && selectedDate && selectedTime && (
+        {stepNumber === BOOKING_STEPS.CONFIRMATION && selectedCategory && selectedService && selectedDate && selectedTime && (
           <BookingConfirmation
             selectedCategory={{
               name: selectedCategory.name ?? '',
-              icon: selectedCategory.icon,
+              // backend CategoryTypes doesn't include 'icon' — provide undefined fallback
+              icon: (selectedCategory as any).icon ?? undefined,
             }}
             selectedService={{
               name: selectedService.name ?? '',
@@ -196,7 +203,7 @@ const App: React.FC = () => {
         )}
 
         {/* Step 7: Booking Success */}
-        {step === 7 && bookings.length > 0 && (
+        {stepNumber === BOOKING_STEPS.SUCCESS && bookings.length > 0 && (
           <BookingSuccess
             booking={{
               ticketNumber: bookings[bookings.length - 1].id?.toString() || 'N/A',
@@ -221,9 +228,9 @@ const App: React.FC = () => {
         )}
       </div>
 
-      {step === 1 && (
+      {stepNumber === BOOKING_STEPS.CATEGORY_SELECTION && (
         <MyBookings
-          bookings={bookings as BookingData[]}
+          bookings={bookings as any as BookingData[]}
           onShowTicket={handleShowTicket}
         />
       )}

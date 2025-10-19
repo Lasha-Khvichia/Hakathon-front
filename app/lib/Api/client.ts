@@ -1,6 +1,8 @@
 // lib/api/client.ts
 
 import { API_CONFIG } from "./confing";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from 'axios';
 
  
 

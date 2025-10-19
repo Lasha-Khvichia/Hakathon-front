@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 import styles from './DateSelection.module.scss';
 import { getNextDays } from '../../../utils/dateHelper';
-import { DateInfo } from '../../AppComponents/types';
+import { DateInfo } from '../../../types';
  
 
 interface DateSelectionProps {

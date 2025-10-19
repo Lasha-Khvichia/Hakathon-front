@@ -1,17 +1,11 @@
 "use client"
 import React from 'react';
 import styles from './CategorySelection.module.scss';
-
-type Category = {
-  id: string | number;
-  name: string;
-  color?: 'blue' | 'green' | 'purple' | 'red' | 'indigo' | 'yellow';
-  icon?: React.ReactNode;
-};
+import { CategoryTypes } from '@/app/BackAPI/CategoryTypes';
 
 interface CategorySelectionProps {
-  categories: Category[];
-  onSelect: (category: Category) => void;
+  categories: CategoryTypes[];
+  onSelect: (category: CategoryTypes) => void;
 }
 
 export const CategorySelection = ({ categories, onSelect }: CategorySelectionProps) => {
@@ -23,9 +17,11 @@ export const CategorySelection = ({ categories, onSelect }: CategorySelectionPro
           <button
             key={category.id}
             onClick={() => onSelect(category)}
-            className={`${styles.categoryCard} ${styles[`color${category.color?.charAt(0).toUpperCase()}${category.color?.slice(1)}` || 'colorBlue']}`}
+            className={styles.categoryCard}
           >
-            <div className={styles.categoryIcon}>{category.icon}</div>
+            <div className={styles.categoryIcon}>{/* Fallback icon: first letter */}
+              {String(category.name).charAt(0).toUpperCase()}
+            </div>
             <div className={styles.categoryName}>{category.name}</div>
           </button>
         ))}

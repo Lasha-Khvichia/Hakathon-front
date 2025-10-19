@@ -35,3 +35,10 @@ export const ERROR_MESSAGES = {
   BOOKING_FAILED: 'Failed to create booking. Please try again.',
   FETCH_FAILED: 'Failed to fetch data. Please try again.',
 } as const;
+
+export const VALIDATION = {
+  MIN_NAME_LENGTH: 2,
+  MAX_NAME_LENGTH: 100,
+  MIN_PASSWORD_LENGTH: 6,
+  MAX_PASSWORD_LENGTH: 100,
+} as const;

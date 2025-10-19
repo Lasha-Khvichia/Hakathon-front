@@ -1,4 +1,5 @@
 // hooks/useAuth.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { UserTypes } from '../BackAPI/UserTypes';
 import { authService } from '../lib/Api/service';
@@ -17,7 +18,7 @@ export const useAuth = () => {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
-        const userData = await authService.getMe();
+  const userData = await authService.getProfile();
         setUser(userData);
       }
     } catch (err) {

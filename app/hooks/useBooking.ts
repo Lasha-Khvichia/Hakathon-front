@@ -1,9 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState, useCallback, useEffect } from 'react';
-import { Category, Service, Branch, BookingData, LoadingState } from '../types';
+import { Category, Service, Branch, BookingData } from '../types';
 import { BOOKING_STEPS } from '../constants';
 import { validateBookingForm } from '../utils/validation';
 import { checkBookingAvailability } from '../components/services/geminiAPI.';
+
+// Local LoadingState type
+type LoadingState = {
+  isLoading: boolean;
+  error: string | null;
+};
 
 interface UseBookingReturn {
   step: number;
@@ -85,11 +92,11 @@ export const useBooking = (): UseBookingReturn => {
 
   const confirmBooking = useCallback(async (geminiApiKey?: string) => {
     const bookingData = {
-      category: selectedCategory,
-      service: selectedService,
-      branch: selectedBranch,
-      date: selectedDate,
-      time: selectedTime,
+      category: selectedCategory as any,
+      service: selectedService as any,
+      branch: selectedBranch as any,
+      date: selectedDate as any,
+      time: selectedTime as any,
     };
 
     const validation = validateBookingForm(bookingData);
@@ -129,13 +136,12 @@ export const useBooking = (): UseBookingReturn => {
 
       const newBooking: BookingData = {
         id: Date.now(),
-        category: selectedCategory,
-        service: selectedService,
-        branch: selectedBranch,
-        date: selectedDate,
-        time: selectedTime,
-        ticketNumber: Math.floor(Math.random() * 2000) + 1,
-        status: 'confirmed',
+        ticketNumber: (Math.floor(Math.random() * 2000) + 1).toString(),
+        category: (selectedCategory as any) || { name: '', icon: '' },
+        service: (selectedService as any) || { name: '' },
+        branch: (selectedBranch as any) || null,
+        date: (selectedDate as any) || new Date().toISOString(),
+        time: (selectedTime as any) || '',
         createdAt: new Date(),
         updatedAt: new Date(),
       };

@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from 'react';
  
-import styles from './Auth.module.scss';
+import styles from '../Auth.module.scss';
 
 export const Login: React.FC<{ onSwitchToRegister: () => void }> = ({ onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
@@ -55,7 +55,7 @@ export const Login: React.FC<{ onSwitchToRegister: () => void }> = ({ onSwitchTo
         </form>
 
         <p className={styles.switchText}>
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <button
             type="button"
             onClick={onSwitchToRegister}

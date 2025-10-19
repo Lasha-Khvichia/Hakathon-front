@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // hooks/useBooking.ts
 import { BookingTypes } from '@/app/BackAPI/BookingTypes';
 import { CategoryTypes } from '@/app/BackAPI/CategoryTypes';
@@ -21,7 +22,7 @@ interface Branch {
 }
 
 export const useBooking = () => {
-  const [step, setStep] = useState(BOOKING_STEPS.CATEGORY_SELECTION);
+  const [step, setStep] = useState<number>(BOOKING_STEPS.CATEGORY_SELECTION);
   const [selectedCategory, setSelectedCategory] = useState<CategoryTypes | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
@@ -44,8 +45,14 @@ export const useBooking = () => {
     try {
       const data = await categoryService.getAll();
       setCategories(data);
+      if (!data || data.length === 0) {
+        setError('Failed to load categories');
+      } else {
+        setError(null);
+      }
     } catch (err) {
       console.error('Failed to load categories:', err);
+      setError('Failed to load categories');
     }
   };
 
