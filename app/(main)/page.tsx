@@ -1,10 +1,13 @@
 import React from 'react';
 import Auth from '../components/Auth/Auth'; 
+import AppComponents from '../components/AppComponents/AppComponents';
 
-const Page: React.FC = () => {
+
+export default function Home() {
   return (
-    <div className="page">
-      <Auth />
+    <div className={styles.everythingWrapper}>
+       <AppComponents/>
+       
     </div>
   );
 };

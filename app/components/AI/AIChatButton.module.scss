@@ -1,0 +1,22 @@
+.aiChatButton {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: linear-gradient(to right, #9333ea, #ec4899);
+  color: white;
+  padding: 1rem;
+  border-radius: 50%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s;
+  z-index: 40;
+
+  &:hover {
+    background: linear-gradient(to right, #7e22ce, #db2777);
+    transform: scale(1.1);
+  }
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}

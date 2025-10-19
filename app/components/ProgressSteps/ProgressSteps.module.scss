@@ -1,0 +1,70 @@
+.progressSteps {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stepsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.stepCircle {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+
+  &--completed {
+    background-color: #10b981;
+    color: white;
+  }
+
+  &--current {
+    background-color: #4f46e5;
+    color: white;
+  }
+
+  &--upcoming {
+    background-color: #d1d5db;
+    color: #4b5563;
+  }
+}
+
+.stepLabel {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  white-space: nowrap;
+  display: none;
+
+  @media (min-width: 640px) {
+    display: inline;
+  }
+}
+
+.stepConnector {
+  width: 2rem;
+  height: 0.25rem;
+  background-color: #d1d5db;
+  margin: 0 0.5rem;
+  flex-shrink: 0;
+
+  @media (min-width: 640px) {
+    width: 4rem;
+  }
+}

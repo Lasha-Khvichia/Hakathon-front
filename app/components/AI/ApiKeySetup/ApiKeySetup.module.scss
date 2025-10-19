@@ -1,0 +1,87 @@
+.apiKeySetup {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.iconWrapper {
+  width: 4rem;
+  height: 4rem;
+  background-color: #f3e8ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  color: #9333ea;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.link {
+  color: #9333ea;
+  font-size: 0.875rem;
+  display: inline-block;
+  margin-top: 0.5rem;
+  transition: text-decoration 0.15s;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.15s;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #9333ea;
+    border-color: transparent;
+  }
+}
+
+.button {
+  width: 100%;
+  background: linear-gradient(to right, #9333ea, #ec4899);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.15s;
+
+  &:hover {
+    background: linear-gradient(to right, #7e22ce, #db2777);
+  }
+}

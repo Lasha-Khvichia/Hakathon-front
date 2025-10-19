@@ -1,0 +1,86 @@
+.categorySelection {
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.categoryCard {
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.colorBlue {
+  background-color: #3b82f6;
+  &:hover {
+    background-color: #2563eb;
+  }
+}
+
+.colorGreen {
+  background-color: #10b981;
+  &:hover {
+    background-color: #059669;
+  }
+}
+
+.colorPurple {
+  background-color: #a855f7;
+  &:hover {
+    background-color: #9333ea;
+  }
+}
+
+.colorRed {
+  background-color: #ef4444;
+  &:hover {
+    background-color: #dc2626;
+  }
+}
+
+.colorIndigo {
+  background-color: #6366f1;
+  &:hover {
+    background-color: #4f46e5;
+  }
+}
+
+.colorYellow {
+  background-color: #eab308;
+  &:hover {
+    background-color: #ca8a04;
+  }
+}
+
+.categoryIcon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.categoryName {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
