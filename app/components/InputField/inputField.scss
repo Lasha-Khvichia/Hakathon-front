@@ -1,0 +1,143 @@
+@import '../Auth/variables.scss';
+
+.form-group { 
+  margin-bottom: 24px; 
+  position: relative;
+
+  &.error {
+    .form-input {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .input-icon {
+      color: $error-color;
+    }
+  }
+
+  &.focused {
+    .input-icon {
+      color: $primary-color;
+    }
+  }
+
+  &.success {
+    .form-input {
+      border-color: $success-color;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .input-icon {
+      color: $success-color;
+    }
+  }
+}
+
+.form-label {
+  display: block;
+  color: darken($text-secondary, 10%);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+
+  .required-asterisk {
+    color: $error-color;
+    margin-left: 4px;
+  }
+}
+
+.input-wrapper { 
+  position: relative;
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: lighten($text-secondary, 10%);
+    pointer-events: none;
+    @include transition;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px 14px 14px 45px;
+    border: 2px solid $border-color;
+    border-radius: 12px;
+    font-size: 1rem;
+    @include transition;
+    outline: none;
+    background: white;
+    color: $text-primary;
+
+    &::placeholder { 
+      color: lighten($text-secondary, 20%); 
+    }
+
+    &:focus { 
+      border-color: $primary-color; 
+      box-shadow: 0 0 0 3px $input-focus; 
+    }
+
+    &:hover:not(:focus) { 
+      border-color: darken($border-color, 10%); 
+    }
+
+    &:disabled {
+      background: lighten($border-color, 5%);
+      cursor: not-allowed;
+    }
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: lighten($text-secondary, 10%);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    @include transition(color);
+
+    &:hover { 
+      color: $primary-color; 
+    }
+
+    &:focus { 
+      outline: 2px solid $primary-color; 
+      outline-offset: 2px; 
+      border-radius: 4px; 
+    }
+  }
+}
+
+.error-message {
+  display: block;
+  color: $error-color;
+  font-size: 0.8rem;
+  margin-top: 6px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.success-message {
+  display: block;
+  color: $success-color;
+  font-size: 0.8rem;
+  margin-top: 6px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

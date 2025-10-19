@@ -1,6 +1,12 @@
+import React from 'react';
+import Auth from '../components/Auth/Auth'; 
 
-export default function Home() {
+const Page: React.FC = () => {
   return (
-    <div></div>
+    <div className="page">
+      <Auth />
+    </div>
   );
-}
+};
+
+export default Page;

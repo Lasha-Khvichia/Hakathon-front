@@ -1,0 +1,224 @@
+@import '../Auth/variables.scss';
+
+// Form Panel
+.form-panel {
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (max-width: 480px) {
+    padding: 40px 30px;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h2 {
+      font-size: 2rem;
+      color: $text-primary;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 0.95rem;
+    }
+  }
+
+  .auth-form {
+    width: 100%;
+  }
+}
+
+// Form Elements
+.form-group {
+  margin-bottom: 24px;
+
+  .form-label {
+    display: block;
+    color: darken($text-secondary, 10%);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: lighten($text-secondary, 10%);
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 14px 14px 45px;
+      border: 2px solid $border-color;
+      border-radius: 12px;
+      font-size: 1rem;
+      @include transition;
+      outline: none;
+      background: white;
+
+      &::placeholder {
+        color: lighten($text-secondary, 20%);
+      }
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px $input-focus;
+      }
+
+      &:hover:not(:focus) {
+        border-color: darken($border-color, 10%);
+      }
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: lighten($text-secondary, 10%);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      @include transition(color);
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      &:focus {
+        outline: 2px solid $primary-color;
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+// Submit Button
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: $primary-gradient;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  @include transition;
+  margin-bottom: 20px;
+  position: relative;
+
+  &:hover:not(:disabled) {
+    @include button-hover;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Toggle Mode
+.toggle-mode {
+  text-align: center;
+  margin-bottom: 20px;
+  color: $text-secondary;
+  font-size: 0.9rem;
+
+  .toggle-link {
+    color: $primary-color;
+    cursor: pointer;
+    font-weight: 600;
+    @include transition;
+
+    &:hover {
+      color: darken($primary-color, 10%);
+      text-decoration: underline;
+    }
+  }
+}
+
+// Forgot Password
+.forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    font-size: 0.9rem;
+    @include transition;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Divider
+.divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  color: $text-secondary;
+  font-size: 0.9rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: $border-color;
+    z-index: 1;
+  }
+
+  span {
+    background: white;
+    padding: 0 15px;
+    position: relative;
+    z-index: 2;
+  }
+}

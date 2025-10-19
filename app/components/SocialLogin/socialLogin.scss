@@ -1,0 +1,39 @@
+@import '../Auth/variables.scss';
+
+.social-login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.social-btn {
+  padding: 12px;
+  border: 2px solid $border-color;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  @include transition;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: $text-secondary;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    border-color: $primary-color;
+    background: $primary-color;
+    color: white;
+    @include button-hover;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
