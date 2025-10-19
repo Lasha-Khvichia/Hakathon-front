@@ -1,93 +1,86 @@
-import { ReactNode } from "react";
+import { BookingTypes } from "../BackAPI/BookingTypes";
+import { CategoryTypes } from "../BackAPI/CategoryTypes";
+import { CompanyTypes } from "../BackAPI/CompanyTypes";
+import { RolesEnum, UserTypes } from "../BackAPI/UserTypes";
+
  
 
+// Re-export all types
+export type { BookingTypes, CategoryTypes, CompanyTypes, UserTypes };
+export { RolesEnum };
+
+// Additional types for the application
+export interface Day {
+  day: string;
+  num: number;
+  month: string;
+  year: number;
+}
+
 export interface Category {
-  id: string | number;
+  id?: number;
   name: string;
-  icon?: ReactNode | string;
-  color?: "blue" | "green" | "purple" | "red" | "indigo" | "yellow";
- 
-  hasBranches?: boolean;
+  icon: string;
+  color?: string;
   hasServices?: boolean;
+  hasBranches?: boolean;
 }
 
 export interface Service {
-  id: string | number;
+  id: number;
   name: string;
-  icon?: ReactNode | string;
-  description?: string;
-  estimatedTime?: string;
- 
+  icon?: string;
 }
 
 export interface Branch {
-  id: string | number;
+  id: number;
   name: string;
   address?: string;
-  phone?: string;
-  workingHours?: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-}
-
-export interface TimeSlot {
-  id: string;
-  time: string;
-  available: boolean;
-}
-
-export interface DateInfo {
-  day: string;
-  num: number | string;
-  month: string;
-  year?: number;
-  full?: string;
- 
+  icon?: string;
 }
 
 export interface BookingData {
-  id: number;
-  category: Category | null;
-  service: Service | null;
-  branch: Branch | null;
-  date: string | Date | null;
-  time: string | null;
-  ticketNumber: number;
-  status?: string;
+  id?: number;
+  ticketNumber: string;
+  category: {
+    name: string;
+    icon?: string;
+  };
+  service: {
+    icon: ReactNode;
+    name: string;
+  };
+  branch: {
+    name: string;
+  } | null;
+  date: Date | string;
+  time: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export interface LoadingState {
-  isLoading: boolean;
-  error?: string | null;
-}
-
-export interface Day {
-  day: string;
-  num: number | string;
-  month: string;
-  year?: number;
-  full?: string;
-}
-
+// API Response Types
 export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
+  data: T;
   message?: string;
+  success: boolean;
 }
 
-export type BookingStepHandler<T = unknown> = (data: T) => void;
-export type VoidHandler = () => void;
-
-export interface ComponentWithChildren {
-  children: ReactNode;
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
-export interface ComponentWithClassName {
-  className?: string;
+// Auth Response Types
+export interface LoginResponse {
+  user: UserTypes;
+  token: string;
 }
- 
+
+export interface RegisterResponse {
+  user: UserTypes;
+  token: string;
+}

@@ -21,7 +21,6 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [notifications] = useState(3);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -114,9 +113,6 @@ export const Header: React.FC = () => {
 
             <button className={styles.iconButton} title="Notifications">
               <Bell className={styles.icon} />
-              {notifications > 0 && (
-                <span className={styles.badge}>{notifications}</span>
-              )}
             </button>
 
             <button className={styles.iconButton} title="Help">
@@ -193,8 +189,6 @@ export const Header: React.FC = () => {
                 Choose what you need - AI assistant available! 🤖
               </p>
             </div>
-
-            
           </div>
         </div>
       </div>
@@ -208,9 +202,6 @@ export const Header: React.FC = () => {
           <button className={styles.mobileMenuItem}>
             <Bell className={styles.mobileMenuIcon} />
             Notifications
-            {notifications > 0 && (
-              <span className={styles.mobileBadge}>{notifications}</span>
-            )}
           </button>
           <button className={styles.mobileMenuItem}>
             <HelpCircle className={styles.mobileMenuIcon} />
