@@ -1,6 +1,7 @@
 "use client"
 
 import axios from 'axios';
+import { AUTH_CONFIG, GEMINI_CONFIG } from '@/app/lib/Api/confing';
 
 interface GeminiPart {
     text: string;
@@ -15,29 +16,50 @@ interface GeminiCandidate {
 }
 
 interface GeminiResponse {
-    candidates?: GeminiCandidate[];
+    candidates: GeminiCandidate[];
 }
 
-// Minimal wrapper for calling AI. This is a placeholder that should be
-// implemented to call your chosen LLM endpoint (Gemini/OpenAI/etc.). For
-// now it returns the model text if available.
-export const callGeminiAPI = async (message: string, apiKey: string): Promise<string> => {
-    // NOTE: Implement your real API call here. For now this function simply
-    // returns the prompt so the rest of the flow can be tested end-to-end.
-    // You can replace this with a fetch to the AI provider when you have
-    // an API key and endpoint.
-    return `AI prompt sent:\n${message}`;
+// Environment-controlled AI API wrapper
+export const callGeminiAPI = async (message: string, apiKey?: string): Promise<string> => {
+    // Use environment-provided Gemini API URL and key
+    const geminiUrl = GEMINI_CONFIG.apiUrl;
+    const geminiKey = apiKey || GEMINI_CONFIG.apiKey;
+    
+    // For development/testing - return placeholder if no real API key provided
+    if (!geminiKey || geminiKey === 'your_actual_gemini_api_key_here') {
+        return `AI prompt sent (dev mode):\n${message}`;
+    }
+    
+    try {
+        const response = await axios.post(
+            `${geminiUrl}?key=${geminiKey}`,
+            {
+                contents: [{
+                    parts: [{ text: message }]
+                }]
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                timeout: 30000,
+            }
+        );
+        
+        const result = response.data as GeminiResponse;
+        return result.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from AI';
+    } catch (error) {
+        console.error('Gemini API error:', error);
+        return `AI API Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
 };
 
-// Checks availability by asking the AI assistant. It first loads bookings
-// from the backend (/api/booking) and then constructs a prompt that includes
-// the user's desired category/company/service/date/time and the list of
-// existing bookings. The AI is expected to answer whether the requested
-// slot is free and suggest alternatives.
+// Checks availability by asking the AI assistant using environment-controlled endpoints
 export const checkBookingAvailability = async (
     bookingData: {
         category: string;
-        company: string;
+        company?: string;
+        branch?: string;
         service?: string;
         date: string; // ISO or human-readable
         time: string; // e.g. "14:30"
@@ -49,13 +71,10 @@ export const checkBookingAvailability = async (
     aiRaw?: string;
     alternativeSlots?: Array<{ date: string; time: string }>
 }> => {
-    // Read token from localStorage if available (dev fallback).
-    // Use the provided dev JWT so local dev requests to the backend are authorized.
-    const DEV_AUTH = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoxLCJyb2xlIjoidXNlciIsImlhdCI6MTc2MDgxODQyNCwiZXhwIjoxNzYwOTA0ODI0fQ.jNXAGyjvEKu8cNDJ6m6S4uZyH6t76o-Ulw8GEihZ_tA';
-    const token = (typeof window !== 'undefined' && (localStorage.getItem('authToken') || DEV_AUTH)) || undefined;
+    // Use environment-controlled authentication
+    const token = (typeof window !== 'undefined' && (localStorage.getItem(AUTH_CONFIG.tokenKey) || AUTH_CONFIG.devToken)) || undefined;
 
-    // Fetch bookings from backend. We use the proxied endpoint /api/booking
-    // which is rewritten to http://localhost:3002/booking by next.config.
+    // Fetch bookings from backend using environment-controlled proxy endpoint
     let bookings: Array<any> = [];
     try {
         const res = await axios.get('/api/booking', {
@@ -77,9 +96,9 @@ export const checkBookingAvailability = async (
     }).join('\n') || 'No existing bookings returned.';
 
     // Construct prompt
-        const companyName = (bookingData as any).company || (bookingData as any).branch || 'N/A';
+    const companyName = bookingData.company || bookingData.branch || 'N/A';
 
-        const prompt = `You are an assistant that checks booking availability.
+    const prompt = `You are an assistant that checks booking availability.
 User requested a booking with the following details:
 Category: ${bookingData.category}
 Company: ${companyName}
@@ -105,7 +124,7 @@ Respond in JSON only with the following shape:
     // DEV: if callGeminiAPI is a local placeholder that simply echoes the prompt
     // (it returns a string starting with "AI prompt sent:"), treat this as a
     // permissive positive response so the booking flow can proceed during dev.
-    if (typeof aiRaw === 'string' && aiRaw.startsWith('AI prompt sent:')) {
+    if (typeof aiRaw === 'string' && aiRaw.startsWith('AI prompt sent')) {
         return {
             isAvailable: true,
             message: 'Checked (dev): assuming slot is available.',

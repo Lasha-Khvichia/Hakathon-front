@@ -4,7 +4,7 @@ import { BookingTypes } from '@/app/BackAPI/BookingTypes';
 import { CategoryTypes } from '@/app/BackAPI/CategoryTypes';
 import { CompanyTypes } from '@/app/BackAPI/CompanyTypes';
 import { BOOKING_STEPS } from '@/app/constants';
-import { bookingService, categoryService, companyService } from '@/app/lib/Api/service';
+import { categoryService, companyService } from '@/app/lib/Api/service';
 import { useState, useEffect } from 'react';
  
 
@@ -58,8 +58,18 @@ export const useBooking = () => {
 
   const loadUserBookings = async () => {
     try {
-      const data = await bookingService.getUserBookings();
-      setBookings(data);
+      const token = localStorage.getItem('authToken') || '';
+      const response = await fetch('http://localhost:3002/booking/user/1', { // TODO: Get user ID from auth context
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setBookings(data);
+      }
     } catch (err) {
       console.error('Failed to load bookings:', err);
     }
@@ -144,12 +154,31 @@ export const useBooking = () => {
       bookedDateTime.setHours(adjustedHours, minutes, 0, 0);
 
       const bookingData = {
+        userId: 1, // TODO: Get from auth context
         companyId: company.id,
-        booked: bookedDateTime.toISOString(),
-        serviceName: selectedService.name,
+        bookedDate: bookedDateTime.toISOString(),
+        startTime: bookedDateTime.toISOString(),
+        endTime: new Date(bookedDateTime.getTime() + 60 * 60 * 1000).toISOString(), // 1 hour later
+        type: 'appointment',
+        notes: `Service: ${selectedService.name}`,
       };
 
-      const newBooking = await bookingService.create(bookingData);
+      const token = localStorage.getItem('authToken') || '';
+      const response = await fetch('http://localhost:3002/booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create booking');
+      }
+
+      const newBooking = await response.json();
       setBookings(prev => [...prev, newBooking]);
       setStep(BOOKING_STEPS.SUCCESS);
     } catch (err: any) {
@@ -179,7 +208,19 @@ export const useBooking = () => {
 
   const deleteBooking = async (bookingId: number) => {
     try {
-      await bookingService.delete(bookingId);
+      const token = localStorage.getItem('authToken') || '';
+      const response = await fetch(`http://localhost:3002/booking/${bookingId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete booking');
+      }
+
       setBookings(prev => prev.filter(b => b.id !== bookingId));
     } catch (err) {
       console.error('Failed to delete booking:', err);

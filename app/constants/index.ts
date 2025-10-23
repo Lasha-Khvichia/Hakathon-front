@@ -1,4 +1,6 @@
 // constants/index.ts
+import { AUTH_CONFIG, GEMINI_CONFIG } from '../lib/Api/confing';
+
 export const BOOKING_STEPS = {
   CATEGORY_SELECTION: 1,
   SERVICE_SELECTION: 2,
@@ -16,10 +18,11 @@ export const API_STATUS = {
   ERROR: 'error',
 } as const;
 
+// Environment-controlled storage keys
 export const STORAGE_KEYS = {
-  AUTH_TOKEN: 'authToken',
+  AUTH_TOKEN: AUTH_CONFIG.tokenKey,
   USER_DATA: 'userData',
-  GEMINI_API_KEY: 'gemini_api_key',
+  GEMINI_API_KEY: GEMINI_CONFIG.storageKey,
 } as const;
 
 export const DATE_FORMAT = {
@@ -34,6 +37,7 @@ export const ERROR_MESSAGES = {
   INVALID_CREDENTIALS: 'Invalid email or password.',
   BOOKING_FAILED: 'Failed to create booking. Please try again.',
   FETCH_FAILED: 'Failed to fetch data. Please try again.',
+  ENV_VALIDATION_FAILED: 'Environment configuration error. Please check your .env.local file.',
 } as const;
 
 export const VALIDATION = {

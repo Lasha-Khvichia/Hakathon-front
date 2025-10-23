@@ -1,5 +1,5 @@
 import { BookingTypes } from "../BackAPI/BookingTypes";
-import { CategoryTypes } from "../BackAPI/CategoryTypes";
+import { CategoryTypes, CreateCategoryDto } from "../BackAPI/CategoryTypes";
 import { CompanyTypes } from "../BackAPI/CompanyTypes";
 import { RolesEnum, UserTypes } from "../BackAPI/UserTypes";
 import { ReactNode } from 'react';
@@ -7,7 +7,7 @@ import { ReactNode } from 'react';
  
 
 // Re-export all types
-export type { BookingTypes, CategoryTypes, CompanyTypes, UserTypes };
+export type { BookingTypes, CategoryTypes, CreateCategoryDto, CompanyTypes, UserTypes };
 export { RolesEnum };
 
 // Additional types for the application

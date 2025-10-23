@@ -27,6 +27,7 @@ import { AIChatModal } from '../AI/AIChatModal/AIChatModal';
 import { useAuthContext } from '../../context/AuthContext';
 import { Register } from '../Auth/register/Register';
 import { Login } from '../Auth/login/Logint';
+import { EnvironmentStatus } from '../dev/EnvironmentStatus';
 
 
 const App: React.FC = () => {
@@ -150,12 +151,23 @@ const App: React.FC = () => {
 
         {/* Step 2: Service Selection */}
         {stepNumber === BOOKING_STEPS.SERVICE_SELECTION && selectedCategory && (
-          <ServiceSelection
-            // ServiceSelection expects a small category object (icon/color). Create a lightweight map.
-            category={{ icon: String(selectedCategory.name).charAt(0), color: 'blue' } as any}
-            services={serviceOptions[selectedCategory.id as keyof typeof serviceOptions] as any || []}
-            onSelect={handleServiceSelect as any}
-          />
+          (() => {
+            const categoryId = selectedCategory.id;
+            const mappedServices = serviceOptions[categoryId as keyof typeof serviceOptions] || [];
+            console.log('DEBUG - Category ID:', categoryId);
+            console.log('DEBUG - Available serviceOptions keys:', Object.keys(serviceOptions));
+            console.log('DEBUG - Mapped services:', mappedServices);
+            console.log('DEBUG - All serviceOptions:', serviceOptions);
+            
+            return (
+              <ServiceSelection
+                // ServiceSelection expects a small category object (icon/color). Create a lightweight map.
+                category={{ icon: String(selectedCategory.name).charAt(0), color: 'blue' } as any}
+                services={mappedServices as any}
+                onSelect={handleServiceSelect as any}
+              />
+            );
+          })()
         )}
 
         {/* Step 3: Branch Selection */}
@@ -269,6 +281,9 @@ const App: React.FC = () => {
         isOpen={false}
         onClose={() => { }}
       />
+
+      {/* Development Environment Status */}
+      <EnvironmentStatus />
     </Container>
   );
 };

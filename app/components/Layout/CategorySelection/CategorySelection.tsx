@@ -8,6 +8,18 @@ interface CategorySelectionProps {
   onSelect: (category: CategoryTypes) => void;
 }
 
+const getColorClass = (color: string) => {
+  const colorMap: { [key: string]: string } = {
+    blue: styles.colorBlue,
+    green: styles.colorGreen,
+    purple: styles.colorPurple,
+    red: styles.colorRed,
+    indigo: styles.colorIndigo,
+    yellow: styles.colorYellow,
+  };
+  return colorMap[color.toLowerCase()] || styles.colorBlue;
+};
+
 export const CategorySelection = ({ categories, onSelect }: CategorySelectionProps) => {
   return (
     <div className={styles.categorySelection}>
@@ -17,10 +29,10 @@ export const CategorySelection = ({ categories, onSelect }: CategorySelectionPro
           <button
             key={category.id}
             onClick={() => onSelect(category)}
-            className={styles.categoryCard}
+            className={`${styles.categoryCard} ${getColorClass(category.color)}`}
           >
-            <div className={styles.categoryIcon}>{/* Fallback icon: first letter */}
-              {String(category.name).charAt(0).toUpperCase()}
+            <div className={styles.categoryIcon}>
+              {category.icon || String(category.name).charAt(0).toUpperCase()}
             </div>
             <div className={styles.categoryName}>{category.name}</div>
           </button>

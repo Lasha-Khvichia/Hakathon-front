@@ -1,6 +1,6 @@
 // lib/api/client.ts
 
-import { API_CONFIG } from "./confing";
+import { API_CONFIG, AUTH_CONFIG } from "./confing";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
@@ -30,15 +30,21 @@ class ApiClient {
 
   private getAuthToken(): string | null {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('authToken');
+      const token = localStorage.getItem(AUTH_CONFIG.tokenKey);
+      if (token) return token;
     }
-    return null;
+    // Use environment-controlled dev token as fallback
+    return AUTH_CONFIG.devToken || null;
   }
 
   private getHeaders(customHeaders?: HeadersInit): HeadersInit {
     const token = this.getAuthToken();
     const headers: HeadersInit = {
       ...this.defaultHeaders,
+      // Disable caching
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       ...customHeaders,
     };
 
